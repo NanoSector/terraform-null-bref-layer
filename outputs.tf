@@ -1,16 +1,6 @@
-output "function_layer_arn" {
-  description = "ARN of the Bref PHP function runtime layer"
-  value       = local.function_layer_arn
-}
-
-output "fpm_layer_arn" {
-  description = "ARN of the Bref PHP-FPM runtime layer"
-  value       = local.fpm_layer_arn
-}
-
-output "console_layer_arn" {
-  description = "ARN of the Bref console runtime layer"
-  value       = local.console_layer_arn
+output "runtime_layer_arn" {
+  description = "ARN of the Bref PHP runtime layer"
+  value       = local.runtime_layer_arn
 }
 
 # PHP Extensions outputs
@@ -20,19 +10,9 @@ output "extension_layer_arns" {
 }
 
 # Combined layer arrays for each runtime type
-output "function_layers" {
-  description = "Array containing the function runtime layer ARN and all extension layer ARNs"
-  value       = local.function_layers
-}
-
-output "fpm_layers" {
-  description = "Array containing the FPM runtime layer ARN and all extension layer ARNs"
-  value       = local.fpm_layers
-}
-
-output "console_layers" {
-  description = "Array containing the console runtime layer ARN and all extension layer ARNs"
-  value       = local.console_layers
+output "runtime_layers" {
+  description = "Array containing the runtime layer ARN and all extension layer ARNs"
+  value       = local.runtime_layers
 }
 
 # Additional useful outputs
@@ -59,9 +39,7 @@ output "php_extensions" {
 output "layer_versions" {
   description = "Version numbers of the layers"
   value = {
-    function = local.function_layer_version
-    fpm      = local.fpm_layer_version
-    console  = local.console_layer_version
+    runtime = local.runtime_layer_version
     extensions = {
       for ext, data in local.valid_extensions : ext => data.version
     }

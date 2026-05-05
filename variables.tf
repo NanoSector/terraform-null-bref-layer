@@ -7,26 +7,10 @@ variable "php_version" {
     condition     = can(regex("^(php-)?[0-9]+(\\.[0-9]+)?$", var.php_version))
     error_message = "PHP version must be in the form \"84\", \"8.4\", or \"php-84\"."
   }
-
-  validation {
-    condition     = !(can(tonumber(var.bref_major)) && tonumber(var.bref_major) == 2 && replace(replace(lower(var.php_version), "php-", ""), ".", "") == "85")
-    error_message = "PHP 8.5 requires bref_major = 3."
-  }
-}
-
-variable "bref_major" {
-  description = "Bref major version to target (2 or 3)"
-  type        = any
-  default     = 2
-
-  validation {
-    condition     = contains([2, 3], tonumber(var.bref_major))
-    error_message = "bref_major must be 2 or 3."
-  }
 }
 
 variable "bref_layers_account_id" {
-  description = "AWS account ID that publishes the Bref runtime layers (defaults to v2 or v3 account based on bref_major)"
+  description = "AWS account ID that publishes the Bref runtime layers (defaults to v3 account)"
   type        = string
   default     = null
 }

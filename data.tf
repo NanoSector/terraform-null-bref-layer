@@ -17,21 +17,12 @@ data "http" "bref_extensions" {
 }
 
 locals {
-  bref_major             = tonumber(var.bref_major)
-  bref_layers_account_id = var.bref_layers_account_id != null ? var.bref_layers_account_id : (local.bref_major == 3 ? "873528684822" : "534081306603")
+  bref_layers_account_id = var.bref_layers_account_id != null ? var.bref_layers_account_id : "873528684822"
   bref_layer_name_prefix = var.bref_layer_name_prefix != null ? var.bref_layer_name_prefix : ""
   # Determine catalog URLs: v3 uses master branch, v2 uses pinned tags
-  bref_catalog_url = var.bref_catalog_url != null ? var.bref_catalog_url : (
-    local.bref_major == 3
-    ? "https://raw.githubusercontent.com/brefphp/bref/refs/heads/master/layers.json"
-    : "https://raw.githubusercontent.com/brefphp/bref/refs/tags/2.4.18/layers.json"
-  )
+  bref_catalog_url = var.bref_catalog_url != null ? var.bref_catalog_url : "https://raw.githubusercontent.com/brefphp/bref/refs/heads/master/layers.json"
 
-  bref_extensions_url = var.bref_extensions_catalog_url != null ? var.bref_extensions_catalog_url : (
-    local.bref_major == 3
-    ? "https://raw.githubusercontent.com/brefphp/extra-php-extensions/refs/heads/master/layers.json"
-    : "https://raw.githubusercontent.com/brefphp/extra-php-extensions/refs/tags/1.8.6/layers.json"
-  )
+  bref_extensions_url = var.bref_extensions_catalog_url != null ? var.bref_extensions_catalog_url : "https://raw.githubusercontent.com/brefphp/extra-php-extensions/refs/heads/master/layers.json"
 
   php_version_normalized = replace(replace(lower(var.php_version), "php-", ""), ".", "")
 
@@ -40,16 +31,11 @@ locals {
   extension_versions = jsondecode(data.http.bref_extensions.response_body)
 
   # Generate layer keys based on CPU type and PHP version
-  cpu_prefix         = var.cpu_type == "arm64" ? "arm-" : ""
-  runtime_layer_key  = "${local.bref_layer_name_prefix}${local.cpu_prefix}php-${local.php_version_normalized}"
-  function_layer_key = local.runtime_layer_key
-  fpm_layer_key      = local.bref_major == 3 ? local.runtime_layer_key : "${local.runtime_layer_key}-fpm"
-  console_layer_key  = local.bref_major == 3 ? local.runtime_layer_key : "${local.bref_layer_name_prefix}console"
+  cpu_prefix        = var.cpu_type == "arm64" ? "arm-" : ""
+  runtime_layer_key = "${local.bref_layer_name_prefix}${local.cpu_prefix}php-${local.php_version_normalized}"
 
   # Get the layer versions for the specified region
-  function_layer_version = lookup(lookup(local.layer_versions, local.function_layer_key, {}), var.aws_region, null)
-  fpm_layer_version      = lookup(lookup(local.layer_versions, local.fpm_layer_key, {}), var.aws_region, null)
-  console_layer_version  = lookup(lookup(local.layer_versions, local.console_layer_key, {}), var.aws_region, null)
+  runtime_layer_version = lookup(lookup(local.layer_versions, local.runtime_layer_key, {}), var.aws_region, null)
 
   # Process PHP extensions
   extension_layer_data = {

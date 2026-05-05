@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.0.0 (unreleased)
+
+* **Breaking**: *Removal of Bref v2*: The `bref_major` switch has been removed and the various layers have been consolidated.
+
 ## [1.1.0](https://github.com/psantus/terraform-null-bref-layer/releases/tag/v1.1.0) (2026-01-13)
 
 ### Features

@@ -23,26 +23,18 @@ module "test_php83_extensions" {
 # Output the results for validation
 output "test_extensions_results" {
   value = {
-    function_arn    = module.test_with_extensions.function_layer_arn
-    fpm_arn         = module.test_with_extensions.fpm_layer_arn
-    console_arn     = module.test_with_extensions.console_layer_arn
-    versions        = module.test_with_extensions.layer_versions
-    extensions      = module.test_with_extensions.extension_layer_arns
-    function_layers = module.test_with_extensions.function_layers
-    fpm_layers      = module.test_with_extensions.fpm_layers
-    console_layers  = module.test_with_extensions.console_layers
+    runtime_layer_arn = module.test_with_extensions.runtime_layer_arn
+    versions          = module.test_with_extensions.layer_versions
+    extensions        = module.test_with_extensions.extension_layer_arns
+    runtime_layers    = module.test_with_extensions.runtime_layers
   }
 }
 
 output "test_php83_extensions_results" {
   value = {
-    function_arn    = module.test_php83_extensions.function_layer_arn
-    fpm_arn         = module.test_php83_extensions.fpm_layer_arn
-    console_arn     = module.test_php83_extensions.console_layer_arn
-    versions        = module.test_php83_extensions.layer_versions
-    extensions      = module.test_php83_extensions.extension_layer_arns
-    function_layers = module.test_php83_extensions.function_layers
-    fpm_layers      = module.test_php83_extensions.fpm_layers
-    console_layers  = module.test_php83_extensions.console_layers
+    runtime_layer_arn = module.test_with_extensions.runtime_layer_arn
+    versions          = module.test_with_extensions.layer_versions
+    extensions        = module.test_with_extensions.extension_layer_arns
+    runtime_layers    = module.test_with_extensions.runtime_layers
   }
 }

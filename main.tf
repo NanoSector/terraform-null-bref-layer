@@ -1,6 +1,6 @@
 # Validation to ensure the requested layer combinations exist
 resource "null_resource" "validate_layers" {
-  count = local.function_layer_version == null || local.fpm_layer_version == null || local.console_layer_version == null ? 1 : 0
+  count = local.runtime_layer_version == null ? 1 : 0
 
   provisioner "local-exec" {
     command = "echo 'ERROR: One or more Bref layers not found for PHP ${var.php_version}, CPU ${var.cpu_type}, region ${var.aws_region}' && exit 1"
@@ -16,28 +16,14 @@ resource "null_resource" "validate_extensions" {
   }
 }
 
-
-
 # Construct the layer ARNs using the Bref naming convention
 locals {
   # Bref layer ARN format: arn:aws:lambda:{region}:{account}:layer:{layer-name}:{version}
-  function_layer_arn = local.function_layer_version != null ? "arn:aws:lambda:${var.aws_region}:${local.bref_layers_account_id}:layer:${local.function_layer_key}:${local.function_layer_version}" : null
-  fpm_layer_arn      = local.fpm_layer_version != null ? "arn:aws:lambda:${var.aws_region}:${local.bref_layers_account_id}:layer:${local.fpm_layer_key}:${local.fpm_layer_version}" : null
-  console_layer_arn  = local.console_layer_version != null ? "arn:aws:lambda:${var.aws_region}:${local.bref_layers_account_id}:layer:${local.console_layer_key}:${local.console_layer_version}" : null
+  runtime_layer_arn = local.runtime_layer_version != null ? "arn:aws:lambda:${var.aws_region}:${local.bref_layers_account_id}:layer:${local.runtime_layer_key}:${local.runtime_layer_version}" : null
 
   # Create combined layer arrays for each runtime type
-  function_layers = compact(concat(
-    [local.function_layer_arn],
-    values(local.extension_arns)
-  ))
-
-  fpm_layers = compact(concat(
-    [local.fpm_layer_arn],
-    values(local.extension_arns)
-  ))
-
-  console_layers = compact(concat(
-    [local.console_layer_arn],
+  runtime_layers = compact(concat(
+    [local.runtime_layer_arn],
     values(local.extension_arns)
   ))
 }
